@@ -1,3 +1,4 @@
+#include <python2.7/Python.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
 
   //main program goes there
   
-  printf("Name of program: %s",argv[0]);
+  /* printf("Name of program: %s",argv[0]);
   printf("Nmber of argument of program: %d",argc-1);
   if(argc>1)
     {
@@ -85,5 +86,12 @@ int main(int argc, char *argv[])
 	  printf(" %s\n",argv[i]);
 	}
     }
-	return 0;
+    return 0;*/
+  Py_SetProgramName(argv[0]);
+  Py_Initialize();
+  PyRun_SimpleString(
+		     "from time import time,ctime\n"
+		     "print 'Today is', ctime(time())\n"
+		     );
+  Py_Finalize();
 }
