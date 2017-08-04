@@ -1,0 +1,15 @@
+#ifndef __capstone_h
+#define __capstone_h
+#include <python2.7/Python.h>
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
+
+void cp_process_expression(const char* filename,const char *func_name, const char* arg);
+
+int cp_call_func(char* filename, char *func_name, char* arg);
+
+void cp_print_usage(FILE* stream,int exit_code);
+
+void cp_execute_argList(int argc, char *argv[]);

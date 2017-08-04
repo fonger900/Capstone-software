@@ -1,24 +1,37 @@
 CC = gcc
-IDIR= include
-SDIR = src
-ODIR = obj
-LDIR = lib
-CFLAGS = -Wsign-compare  -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes
-LFLAGS = -lpython2.7 -lpthread -ldl  -lutil -lm  -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
-PYLIBS = -L/usr/lib/python2.7/config-x86_64-linux-gnu -L/home/phong/anaconda2/lib
-_SRC = main.cpp
-SRC = $(patsubst %,$(SDIR)/%, $(_SRC))
 
-_OBJ = main.o
-OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
+IDIR=~/project/git_prj/Capstone-software/include
+CFLAGS =-I/usr/include -I/$(IDIR) -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes
+
+SDIR =src
+ODIR =obj
+LDIR =lib
+
+LIBS =-lconfig -L/home/phong/anaconda2/lib
+
+LFLAGS =-lpython2.7 -lpthread -ldl  -lutil -lm  -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
+#PYLIBS =-L/usr/lib/x86_64-linux-gnu 
+
+#_DEPS =capstone.h
+#DEPS =$(patsubst %, $(IDIR)/%, $(_DEPS))
+
+_SRC =main.cpp capstone.cpp
+SRC =$(patsubst %, $(SDIR)/%, $(_SRC))
+
+_OBJ =$(_SRC:.cpp=.o)
+OBJ =$(patsubst %, $(ODIR)/%, $(_OBJ))
+
+MAIN = main
 
 # $@ matches the target; $< matches the first dependent
+all: $(MAIN)
+	@echo File 'main' has been compiled
 
-main: $(OBJ) 
-	$(CC) -o $@ $^ $(PYLIBS) $(LFLAGS) 
+$(MAIN): $(OBJ) 
+	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
 
-$(ODIR)/%.o: $(SRC) 
-	$(CC) -c -o $@ $^ $(CFLAGS)	
+$(ODIR)/%.o: $(SDIR)/%.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)	
 
 .PHONY: clean
 
