@@ -3,28 +3,39 @@ import glob
 import os
 import threading
 import os
-# thu tu cac thuoc tinh
-# 1. "duration"
-# 2. "protocol_type" 
-# 3."service"
-# 4. "flag"
-# 5. "src_bytes"
-# 6. "dst_bytes"
-# 7. "count"
-# 8. "serror_rate"
-# 9. "rerror_rate"
-# 10. "diff_srv_rate"
-# 11. "dst_host_count"
-# 12. "dst_host_srv_count"
-# 13. "dst_host_same_srv_rate"
-# 14. "dst_host_diff_srv_rate"
-# 15. "dst_host_srv_serror_rate"  
-def parse_log(file):
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+#full 15 dos attributes
+def extract_average_log(parser_output_dir,rule_dir):
+    list_of_files = glob.glob(parser_output_dir+'conn*.csv')
+    latest_file = max(list_of_files, key=os.path.getctime)
+    filename=os.path.basename(latest_file)
+    with open(latest_file) as csvfile:
+        with open(rule_dir+os.path.splitext(filename)[0]+'.rules','w') as outputfile:
+            readCSV = csv.reader(csvfile)
+            max_count = 0;
+            for row in readCSV:
+                sub_array = []
+                a = ','.join(row)        
+                for i in a.split(','):
+                    if i == '-':
+                        sub_array.append('0')
+                    else:    
+                        sub_array.append(i)
+                if sub_array[-1] == "1" and int(sub_array[7]) > max_count:
+                    max_count = int(sub_array[7])
+            outputfile.write('alert tcp any any -> 192.168.1.3 any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 60; sid: 5000001; rev:1;)')
+            print 'thre is : '+str(max_count/2)
+            print dir_path
+            
+def parse_log(log_dir,parser_output_dir):
     # threading.Timer(5.0, parse_log).start()
-   
-    filename=os.path.basename(file)
-    with open(file) as csvfile:
-        with open('dataset/'+os.path.splitext(filename)[0]+'.csv','w') as outputfile:
+    list_of_files = glob.glob(log_dir+'conn*.log') # * means all if need specific format then *.csv
+    latest_file = max(list_of_files, key=os.path.getctime)
+    filename = os.path.basename(latest_file)
+    with open(latest_file) as csvfile:
+        outputfile_name = parser_output_dir+os.path.splitext(filename)[0]+'.csv'
+        with open(outputfile_name,'w') as outputfile:
             readCSV = csv.reader(csvfile)
             list_syn_error = ["RSTOS0", "RSTRH", "SH", "SHR", "OTH"]
             all_log = []
@@ -115,8 +126,6 @@ def parse_log(file):
                     index = index + 1      
                     if len(sub_array) > 6:
                         outputfile.write(sub_array[8]+","+sub_array[6] + ","+sub_array[5]+"," +sub_array[11] + ","+sub_array[9]+","+sub_array[10]+","+str(count_time)+","+str(serror_rate)+","+str(rerror_rate)+","+str(diff_srv_rate)+","+str(dst_host_count)+","+str(dst_host_srv_count)+","+str(host_same_srv_rate)+","+str(host_diff_srv_rate)+","+str(dst_host_srv_serror_rate)+"\n")
-
-list_of_files = glob.glob('/home/phong/log1/conn*.log') # * means all if need specific format then *.csv
-#latest_file = max(list_of_files, key=os.path.getctime)
-for i in list_of_files:
-    parse_log(i)                                                                          
+                        return outputfile_name
+# parse_log()
+#extract_average_log()                                                

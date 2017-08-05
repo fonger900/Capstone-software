@@ -1,7 +1,11 @@
 import pandas as pd
-
-def preprocess_data(log_data):
-    
+import sys
+import os.path
+#sys.path.insert(0,os.path.dirname(os.getcwd())+"project/git_prj/Capstone-software/src")
+#sys.path.insert(0, "/home/phong/project/git_prj/Capstone-software/src")
+#import parse_log
+                
+def preprocess_data(log_data):   
     #~firstly, we are going to transform all categorical attibute to numeric attribute~
     # preprocessing nomial features
     #preprocess 'service' attribute (having large number of unique value)
@@ -41,7 +45,7 @@ def preprocess_data(log_data):
     
 def predict_label(pre_log_data):
     from sklearn.externals import joblib
-    clf = joblib.load('/home/phong/jpter_notebook/kdd_model.pkl')
+    clf = joblib.load('model/kdd_model.pkl')
     label = clf.predict(pre_log_data)
     return label
 
@@ -49,15 +53,21 @@ def calculate_threshold(log_data):
     threshold = log_data['count'][log_data['label']==1].mean()
     return threshold
     
-def main(dataset_name):
+def run_predict(csv_file):
     colname = ["duration","protocol_type","service","flag","src_bytes","dst_bytes","count","serror_rate","rerror_rate","diff_srv_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_srv_serror_rate"]
-    log_data=pd.read_csv(dataset_name,header=None, names=colname)
+    
+    log_data=pd.read_csv(csv_file,header=None, names=colname)
+    
     pre_log_data = log_data.copy()
     pre_log_data = preprocess_data(pre_log_data)
     label = predict_label(pre_log_data)
     log_data['label'] = label
-    log_data.to_csv('labeled_kdd_dos.csv')
-    threshold = calculate_threshold(log_data)
+    log_data.to_csv(csv_file)
+    #print "done"
     
-    print 'threshold is: {!s}'.format(threshold)
-    print 'done'
+def main(log_dir,parser_output_dir,rule_dir):
+    csv_file = parse_log.parse_log(log_dir,parser_output_dir)
+    run_predict(csv_file)
+    print "break point"
+    parse_log.extract_average_log(parser_output_dir,rule_dir)
+    print "done"

@@ -3,19 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/capstone.h"
-#include <string.h>
+//#include <stdarg.h>
 
-//
-
-void cp_process_expression(const char* filename,const char *func_name, const char* arg)
+PyObject* cp_process_expression(const char* filename,const char *func_name, const char* arg)
 {
     FILE*        exp_file;
-    PyObject*    main_module, * global_dict, * expression;
-
-    // Initialize a global variable for
-    // display of expression results
-    //PyRun_SimpleString("x = 0");
-
+    PyObject*    main_module, * global_dict, * expression,*anObj;    
+    //va_list args;
+    
+    //initialize args to store all variable after 'arg'
+    //va_start (args, arg);
+    
+     
     // Open and execute the Python file
     exp_file = fopen(filename, "r");
     PyRun_SimpleFile(exp_file, filename);
@@ -29,12 +28,40 @@ void cp_process_expression(const char* filename,const char *func_name, const cha
     // from the global dictionary
     expression =
         PyDict_GetItemString(global_dict, func_name);
-    
-    PyObject_CallFunction(expression,"s",arg);
 
+    //char* arg2 = va_arg(args,char*);
+    //if(arg2==NULL)
+    //anObj = PyObject_CallObject(expression,arg);
+    anObj = PyObject_CallFunction(expression,"s",arg);        
+    //va_end(args);//clean up the list
+    
+    return anObj;
     //PyRun_SimpleString("print x");
 }
 
+PyObject* cp_process_expression(const char* filename,const char *func_name, const char* arg1,const char* arg2)
+{
+    FILE*        exp_file;
+    PyObject*    main_module, * global_dict, * expression,*anObj;    
+     
+    // Open and execute the Python file
+    exp_file = fopen(filename, "r");
+    PyRun_SimpleFile(exp_file, filename);
+
+    // Get a reference to the main module
+    // and global dictionary
+    main_module = PyImport_AddModule("__main__");
+    global_dict = PyModule_GetDict(main_module);
+
+    // Extract a reference to the function "func_name"
+    // from the global dictionary
+    expression =
+        PyDict_GetItemString(global_dict, func_name);
+    //PyImport_ImportModule("parse_log");
+    anObj = PyObject_CallFunction(expression,"ss",arg1,arg2);
+    
+    return anObj;
+}
 
 //print usage information
 void cp_print_usage(FILE* stream,int exit_code,const char* program_name)

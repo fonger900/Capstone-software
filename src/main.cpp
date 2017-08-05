@@ -15,9 +15,15 @@ int main(int argc, char *argv[])
   //main program goes there
   config_t cfg;
   config_init(&cfg);
-  const char* filename;
-  const char* func_name;
-  const char* arg;
+  
+  const char* predict_engine;
+  const char* parser;
+  const char* parser_output_dir;
+  const char* rule_dir;
+  const char* log_dir;
+  const char* parser_output_filename;
+
+  PyObject* py_string;
   
   //read file, if error then exit
   if(!config_read_file(&cfg,"/home/phong/project/git_prj/Capstone-software/src/m.cfg"))
@@ -29,21 +35,51 @@ int main(int argc, char *argv[])
     }
 
   //get store name
-  if(!config_lookup_string(&cfg, "core_engine", &filename))
+  if(!config_lookup_string(&cfg, "predict_engine", &predict_engine))
+    fprintf(stderr, "No 'predict_engine' setting in configuration file.\n");
+
+  if(!config_lookup_string(&cfg, "parser", &parser))
     fprintf(stderr, "No 'core_engine' setting in configuration file.\n");
+   
+  if(!config_lookup_string(&cfg,"log_dir",&log_dir))
+    fprintf(stderr, "No 'parser' setting in configuration file.\n");
+   
+  if(!config_lookup_string(&cfg, "rule_dir", &rule_dir))
+    fprintf(stderr, "No 'rule_dir' setting in configuration file.\n");
 
-  if(!config_lookup_string(&cfg, "log_data", &arg))
-    fprintf(stderr, "No 'log_data' setting in configuration file.\n");
-
-  if(!config_lookup_string(&cfg,"func_name",&func_name))
-    fprintf(stderr, "No 'func_name' setting in configuration file.\n");
-
+  if(!config_lookup_string(&cfg, "parser_output_dir", &parser_output_dir))
+    fprintf(stderr, "No 'parser_output_dir' setting in configuration file.\n");
+  
   //pyhton interpreter  
   Py_Initialize();
-  cp_process_expression(filename,func_name,arg);
+
+  char *path, *newpath;
+
+  path=Py_GetPath();
+  newpath=strcat(path, ":."); // or ":.", possibly
+  //printf("newpath = %s",newpath);
+  //PySys_SetPath(newpath);
+  free(newpath);
+  /*parser_output_dir = "/home/phong/project/git_prj/Capstone-software/output_data/";
+
+  rule_dir = "/home/phong/project/git_prj/Capstone-software/test/rules/";
+
+  log_dir = "/home/phong/project/git_prj/Capstone-software/test/log/";*/
+  //PyImport_ImportModule("parse_log");
+  
+  py_string = cp_process_expression(parser,"parse_log",log_dir,parser_output_dir);
+  py_string = PyObject_Repr( py_string);//get string representation of PyObject
+  parser_output_filename = PyString_AsString(py_string);
+  parser_output_filename = "/home/phong/project/git_prj/Capstone-software/output_data/conn.2017-07-28-16-00-00.csv";
+  cp_process_expression(predict_engine,"run_predict",parser_output_filename);
+ 
+  cp_process_expression(parser,"extract_average_log",parser_output_dir,rule_dir);
+  //printf("%s,%s,%s\n",  parser_output_dir,log_dir,rule_dir);
+  //cp_process_expression2(predict_engine,"main",log_dir,parser_output_dir,rule_dir);
+  
+  Py_Finalize();
+
   //exit config parser
   config_destroy(&cfg);
   return(EXIT_SUCCESS);
-  Py_Finalize();
-
 }
