@@ -17,6 +17,6 @@ Program use libconfig library run configuration file.
 Specify two variables in src/getdosrule.cfg to point to Snort's rule directory and Bro's log directory.
 
 ## Compile & run
-...linux
-	$make
-	$./getdosrule
+...sh
+$ make
+$ ./getdosrule
