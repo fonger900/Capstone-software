@@ -6,8 +6,6 @@ Applying Machine Learning to create DoS detection rules for [Snort](https://www.
 ## About
 This software is a part of capstone project of Information Assurance department of FPT University.
 
-![FPTU](http://fpt.edu.vn/wp-content/uploads/2016/12/Logo-FE-e1480672678192.png)
-
 ### How it work.
 This program applies Machine Learning's algorithm to detects DoS attack in [Bro IDS](https://www.bro.org/)'s logs. Then generates DoS detection rule for Snort.
 1. Get logs from Bro's log directory, preprocessing logs to the form of KDDCup99 dataset format.
@@ -43,3 +41,5 @@ rule_dir = "/Snort/rule/dir/"
 $ make
 $ ./getdosrule
 ```
+
+
