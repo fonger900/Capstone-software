@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
   const char* rule_dir;
   const char* log_dir;
   const char* cfg_file="/src/getdosrule.cfg";
+  
   //read file, if error then exit
-
   cfg_file = cp_strcat(cwd,cfg_file);
   if(!config_read_file(&cfg,cfg_file))
     {
@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
   PyImport_ImportModule("pandas");
   free(newpath);*/
   predict_engine = cp_strcat(cwd,predict_engine);
+  parser_output_dir = cp_strcat(cwd,parser_output_dir);
+  //printf("main: %s",parser_output_dir);
   /*
   Py_Object* py_string;
   py_string = cp_process_expression(parser,"parse_log",log_dir,parser_output_dir);

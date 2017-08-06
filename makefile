@@ -36,4 +36,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 .PHONY: clean
 
 clean:
-	rm $(ODIR)/*.o $(MAIN)
+	rm $(ODIR)/*.o $(MAIN) $(SDIR)/parse_log.pyc

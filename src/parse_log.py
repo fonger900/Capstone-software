@@ -3,11 +3,13 @@ import glob
 import os
 import threading
 import os
+
 cwd = os.getcwd()
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #full 15 dos attributes
+
 def extract_average_log(parser_output_dir,rule_dir):
-    list_of_files = glob.glob(cwd+parser_output_dir+'conn*.csv')
+    list_of_files = glob.glob(parser_output_dir+'conn*.csv')
     latest_file = max(list_of_files, key=os.path.getctime)
     filename=os.path.basename(latest_file)
     with open(latest_file) as csvfile:
@@ -24,21 +26,23 @@ def extract_average_log(parser_output_dir,rule_dir):
                         sub_array.append(i)
                 if sub_array[-1] == "1" and int(sub_array[7]) > max_count:
                     max_count = int(sub_array[7])
-            outputfile.write('alert tcp any any -> $(HOME_NET) any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
-            print 'threshold is : '+str(max_count/2)
-            #print 'dir path: '+dir_path
-            #print 'cwd: '+cwd
+            outputfile.write('alert tcp any any -> 192.168.1.3 any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
+            print 'threshold is '+str(max_count/2)
 
-            
             
 def parse_log(log_dir,parser_output_dir):
     # threading.Timer(5.0, parse_log).start()
     list_of_files = glob.glob(log_dir+'conn*.log') # * means all if need specific format then *.csv
     latest_file = max(list_of_files, key=os.path.getctime)
-    filename = os.path.basename(latest_file)
+    filename=os.path.basename(latest_file)
+    
+    output_file = parser_output_dir+os.path.splitext(filename)[0]+'.csv'
+    
+    
     with open(latest_file) as csvfile:
-        outputfile_name = cwd+parser_output_dir+os.path.splitext(filename)[0]+'.csv'
-        with open(outputfile_name,'w') as outputfile:
+        
+        
+        with open(output_file,'w') as outputfile:
             readCSV = csv.reader(csvfile)
             list_syn_error = ["RSTOS0", "RSTRH", "SH", "SHR", "OTH"]
             all_log = []
@@ -129,6 +133,4 @@ def parse_log(log_dir,parser_output_dir):
                     index = index + 1      
                     if len(sub_array) > 6:
                         outputfile.write(sub_array[8]+","+sub_array[6] + ","+sub_array[5]+"," +sub_array[11] + ","+sub_array[9]+","+sub_array[10]+","+str(count_time)+","+str(serror_rate)+","+str(rerror_rate)+","+str(diff_srv_rate)+","+str(dst_host_count)+","+str(dst_host_srv_count)+","+str(host_same_srv_rate)+","+str(host_diff_srv_rate)+","+str(dst_host_srv_serror_rate)+"\n")
-                        return outputfile_name
-# parse_log()
-#extract_average_log()                                                
+    return output_file

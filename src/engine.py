@@ -4,12 +4,12 @@ import os
 
 cwd = os.getcwd()
 sys.path.append(os.path.abspath(cwd+'/src'))
-
+import parse_log
 #sys.path.insert(0,os.path.dirname(os.getcwd())+"project/git_prj/Capstone-software/src")
 #sys.path.insert(0, "/home/phong/project/git_prj/Capstone-software/src")
 #moduleName = input('parse_log')
 #importlib.import_module(moduleName)
-import parse_log
+
 
 def preprocess_data(log_data):   
     #~firstly, we are going to transform all categorical attibute to numeric attribute~
@@ -72,9 +72,9 @@ def run_predict(csv_file):
     #print "done"
     
 def main(log_dir,parser_output_dir,rule_dir):
-    csv_file = parse_log.parse_log(log_dir,parser_output_dir)
     #print "break point"
-    run_predict(csv_file)
+    csv_file = parse_log.parse_log(log_dir,parser_output_dir)
     
+    run_predict(csv_file)
     parse_log.extract_average_log(parser_output_dir,rule_dir)
     print "done"
