@@ -3,11 +3,11 @@ import glob
 import os
 import threading
 import os
-
+cwd = os.getcwd()
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #full 15 dos attributes
 def extract_average_log(parser_output_dir,rule_dir):
-    list_of_files = glob.glob(parser_output_dir+'conn*.csv')
+    list_of_files = glob.glob(cwd+parser_output_dir+'conn*.csv')
     latest_file = max(list_of_files, key=os.path.getctime)
     filename=os.path.basename(latest_file)
     with open(latest_file) as csvfile:
@@ -24,9 +24,12 @@ def extract_average_log(parser_output_dir,rule_dir):
                         sub_array.append(i)
                 if sub_array[-1] == "1" and int(sub_array[7]) > max_count:
                     max_count = int(sub_array[7])
-            outputfile.write('alert tcp any any -> 192.168.1.3 any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 60; sid: 5000001; rev:1;)')
-            print 'thre is : '+str(max_count/2)
-            print dir_path
+            outputfile.write('alert tcp any any -> 192.168.1.3 any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
+            print 'threshold is : '+str(max_count/2)
+            #print 'dir path: '+dir_path
+            #print 'cwd: '+cwd
+
+            
             
 def parse_log(log_dir,parser_output_dir):
     # threading.Timer(5.0, parse_log).start()
@@ -34,7 +37,7 @@ def parse_log(log_dir,parser_output_dir):
     latest_file = max(list_of_files, key=os.path.getctime)
     filename = os.path.basename(latest_file)
     with open(latest_file) as csvfile:
-        outputfile_name = parser_output_dir+os.path.splitext(filename)[0]+'.csv'
+        outputfile_name = cwd+parser_output_dir+os.path.splitext(filename)[0]+'.csv'
         with open(outputfile_name,'w') as outputfile:
             readCSV = csv.reader(csvfile)
             list_syn_error = ["RSTOS0", "RSTRH", "SH", "SHR", "OTH"]

@@ -63,6 +63,30 @@ PyObject* cp_process_expression(const char* filename,const char *func_name, cons
     return anObj;
 }
 
+PyObject* cp_process_expression(const char* filename,const char *func_name, const char* arg1,const char* arg2,const char* arg3)
+{
+    FILE*        exp_file;
+    PyObject*    main_module, * global_dict, * expression,*anObj;    
+     
+    // Open and execute the Python file
+    exp_file = fopen(filename, "r");
+    PyRun_SimpleFile(exp_file, filename);
+
+    // Get a reference to the main module
+    // and global dictionary
+    main_module = PyImport_AddModule("__main__");
+    global_dict = PyModule_GetDict(main_module);
+
+    // Extract a reference to the function "func_name"
+    // from the global dictionary
+    expression =
+        PyDict_GetItemString(global_dict, func_name);
+    //PyImport_ImportModule("parse_log");
+    anObj = PyObject_CallFunction(expression,"sss",arg1,arg2,arg3);
+    
+    return anObj;
+}
+
 //print usage information
 void cp_print_usage(FILE* stream,int exit_code,const char* program_name)
 {
@@ -140,3 +164,40 @@ void cp_execute_argList(int argc, char **argv)
     }
   */
 }
+/*
+void insert_substring(char *a, char *b, int position)
+{
+   char *f, *e;
+   int length;
+ 
+   length = strlen(a);
+ 
+   f = substring(a, 1, position - 1 );      
+   e = substring(a, position, length-position+1);
+ 
+   strcpy(a, "");
+   strcat(a, f);
+   free(f);
+   strcat(a, b);
+   strcat(a, e);
+   free(e);
+}
+ 
+char *substring(char *string, int position, int length) 
+{
+   char *pointer;
+   int c;
+ 
+   pointer = malloc(length+1);
+ 
+   if( pointer == NULL )
+       exit(EXIT_FAILURE);
+ 
+   for( c = 0 ; c < length ; c++ ) 
+      *(pointer+c) = *((string+position-1)+c);       
+ 
+   *(pointer+c) = '\0';
+ 
+   return pointer;
+}
+*/

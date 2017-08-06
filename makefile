@@ -21,11 +21,11 @@ SRC =$(patsubst %, $(SDIR)/%, $(_SRC))
 _OBJ =$(_SRC:.cpp=.o)
 OBJ =$(patsubst %, $(ODIR)/%, $(_OBJ))
 
-MAIN = main
+MAIN = gendosrule
 
 # $@ matches the target; $< matches the first dependent
 all: $(MAIN)
-	@echo File 'main' has been compiled
+	@echo file \'$(MAIN)\' has been compiled
 
 $(MAIN): $(OBJ) 
 	$(CC) -o $@ $^ $(LIBS) $(LFLAGS)
@@ -36,4 +36,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 .PHONY: clean
 
 clean:
-	rm $(ODIR)/*.o main
+	rm $(ODIR)/*.o $(MAIN)
