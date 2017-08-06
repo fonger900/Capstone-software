@@ -13,6 +13,18 @@ int main(int argc, char *argv[])
   cp_execute_argList(argc,argv);
 
   //main program goes there
+
+  //pyhton interpreter
+  Py_Initialize();
+
+  //get current working directory path
+  PyObject* mymod,*strret,*strfunc;
+  char* cwd;
+  mymod= PyImport_ImportModule("os");
+  strfunc = PyObject_GetAttrString(mymod,"getcwd");
+  strret = PyObject_CallFunction(strfunc,NULL);
+  PyArg_Parse(strret,"s",&cwd);
+  
   config_t cfg;
   config_init(&cfg);
   
@@ -20,9 +32,11 @@ int main(int argc, char *argv[])
   const char* parser_output_dir;
   const char* rule_dir;
   const char* log_dir;
-  
+  const char* cfg_file="/src/getdosrule.cfg";
   //read file, if error then exit
-  if(!config_read_file(&cfg,"/home/phong/project/git_prj/Capstone-software/src/m.cfg"))
+
+  cfg_file = cp_strcat(cwd,cfg_file);
+  if(!config_read_file(&cfg,cfg_file))
     {
       fprintf(stderr, "%s:%d - %s\n", config_error_file(&cfg),
             config_error_line(&cfg), config_error_text(&cfg));
@@ -43,28 +57,6 @@ int main(int argc, char *argv[])
   if(!config_lookup_string(&cfg, "parser_output_dir", &parser_output_dir))
     fprintf(stderr, "No 'parser_output_dir' setting in configuration file.\n");
   
-  //pyhton interpreter  
-  Py_Initialize();
-
-  //get current working directory path
-  PyObject* mymod,*strret,*strfunc;
-  char* cwd;
-  mymod= PyImport_ImportModule("os");
-  strfunc = PyObject_GetAttrString(mymod,"getcwd");
-  strret = PyObject_CallFunction(strfunc,NULL);
-  PyArg_Parse(strret,"s",&cwd);
-  
-  char * engine_name ;
-  if((engine_name = (char*)malloc(strlen(predict_engine)+strlen(cwd)+1)) != NULL){
-    engine_name[0] = '\0';   // ensures the memory is an empty string
-    strcat(engine_name,cwd);
-    strcat(engine_name,predict_engine);
-  } else {
-    fprintf(stderr,"malloc failed!\n");
-
-   printf("engine main: %s\n",engine_name);
-    // exit?
-  }
   /*
   char *path, *newpath;
   path=Py_GetPath();
@@ -74,7 +66,7 @@ int main(int argc, char *argv[])
   PySys_SetPath(newpath);
   PyImport_ImportModule("pandas");
   free(newpath);*/
-  
+  predict_engine = cp_strcat(cwd,predict_engine);
   /*
   Py_Object* py_string;
   py_string = cp_process_expression(parser,"parse_log",log_dir,parser_output_dir);
@@ -86,7 +78,7 @@ int main(int argc, char *argv[])
   cp_process_expression(parser,"extract_average_log",parser_output_dir,rule_dir);
   */
   
-  cp_process_expression(engine_name,"main",log_dir,parser_output_dir,rule_dir);
+  cp_process_expression(predict_engine,"main",log_dir,parser_output_dir,rule_dir);
   
   Py_Finalize();
 

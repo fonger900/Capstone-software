@@ -11,8 +11,9 @@ extern void cp_print_usage(FILE* ,int , const char* );
 
 extern void cp_execute_argList(int , char**);
 
-extern void insert_substring(char*, char*,int);
+//extern void insert_substring(char*, char*,int);
 
-extern char* substring(char*,int,int);
+//extern char* substring(char*,int,int);
 
+extern char* cp_strcat(const char*,const char*);
 #endif

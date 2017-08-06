@@ -201,3 +201,18 @@ char *substring(char *string, int position, int length)
    return pointer;
 }
 */
+char* cp_strcat(const char* dst,const char* src)
+{
+  char * new_name ;
+  if((new_name = (char*)malloc(strlen(dst)+strlen(src)+1)) != NULL){
+    new_name[0] = '\0';   // ensures the memory is an empty string
+    strcat(new_name,dst);
+    strcat(new_name,src);
+  } else {
+    fprintf(stderr,"malloc failed!\n");
+
+    //printf("engine main: %s\n",engine_name);
+    // exit?
+  }
+  return new_name;
+}

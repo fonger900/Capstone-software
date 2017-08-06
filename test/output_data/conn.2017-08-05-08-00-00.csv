@@ -1,0 +1,2 @@
+,duration,protocol_type,service,flag,src_bytes,dst_bytes,count,serror_rate,rerror_rate,diff_srv_rate,dst_host_count,dst_host_srv_count,dst_host_same_srv_rate,dst_host_diff_srv_rate,dst_host_srv_serror_rate,label
+0,60.012621,tcp,80,SHR,0,272,0,0,0,0,0,0,0,100,0,1

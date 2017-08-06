@@ -21,7 +21,7 @@ SRC =$(patsubst %, $(SDIR)/%, $(_SRC))
 _OBJ =$(_SRC:.cpp=.o)
 OBJ =$(patsubst %, $(ODIR)/%, $(_OBJ))
 
-MAIN = gendosrule
+MAIN = getdosrule
 
 # $@ matches the target; $< matches the first dependent
 all: $(MAIN)
