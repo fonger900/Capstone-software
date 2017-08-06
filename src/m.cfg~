@@ -1,7 +1,0 @@
-//python file
-
-core_engine = "/home/phong/project/git_prj/Capstone-software/engine.py";
-
-log_data = "/home/phong/project/git_prj/Capstone-software/dataset/conn_all.csv";
-
-func_name = "main";

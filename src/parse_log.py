@@ -24,7 +24,7 @@ def extract_average_log(parser_output_dir,rule_dir):
                         sub_array.append(i)
                 if sub_array[-1] == "1" and int(sub_array[7]) > max_count:
                     max_count = int(sub_array[7])
-            outputfile.write('alert tcp any any -> 192.168.1.3 any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
+            outputfile.write('alert tcp any any -> $(HOME_NET) any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
             print 'threshold is : '+str(max_count/2)
             #print 'dir path: '+dir_path
             #print 'cwd: '+cwd

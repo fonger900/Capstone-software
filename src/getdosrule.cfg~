@@ -1,9 +1,0 @@
-//python file
-
-predict_engine = "/src/engine.py";
-
-parser_output_dir = "/test/output_data/";
-
-rule_dir = "/home/phong/project/git_prj/Capstone-software/test/rules/";
-
-log_dir = "/home/phong/project/git_prj/Capstone-software/test/log/";
