@@ -45,6 +45,7 @@ jobs:
           command: |
             . venv/bin/activate
             sudo apt-get install -y libconfig8-dev
+            make
             ls
 
       - store_artifacts:
