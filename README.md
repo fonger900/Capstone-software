@@ -1,7 +1,7 @@
 # Capstone-software
 Applying Machine Learning to create DoS detection rules for [Snort](https://www.snort.org/).
 
-![louis](http://paoru.fr/wp-content/uploads/2011/11/images.jpg)
+![louis](http://www2.siit.tu.ac.th/crd/wp-content/uploads/2014/04/LogoFUNew.png)
 
 ## About
 This software is a part of capstone project of Information Assurance department of FPT University.
