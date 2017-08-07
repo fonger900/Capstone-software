@@ -17,7 +17,7 @@ jobs:
 
     working_directory: ~/repo
 
-    step:
+    steps:
       - checkout
 
       # Download and cache dependencies
