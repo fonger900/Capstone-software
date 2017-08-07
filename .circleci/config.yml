@@ -44,7 +44,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            
+            sudo apt-get install -y libconfig8-dev
             ls
 
       - store_artifacts:
