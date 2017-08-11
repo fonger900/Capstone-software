@@ -41,5 +41,8 @@ rule_dir = "/Snort/rule/dir/"
 $ make
 $ ./getdosrule
 ```
-
+### Clean
+```sh
+$ make clean
+```
 
