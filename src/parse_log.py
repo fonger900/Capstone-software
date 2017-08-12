@@ -15,7 +15,8 @@ def extract_average_log(parser_output_dir,rule_dir):
     with open(latest_file) as csvfile:
         with open(rule_dir+os.path.splitext(filename)[0]+'.rules','w') as outputfile:
             readCSV = csv.reader(csvfile)
-            max_count = 0;
+            normal_count = 0
+            total_record = 0
             for row in readCSV:
                 sub_array = []
                 a = ','.join(row)        
@@ -23,11 +24,12 @@ def extract_average_log(parser_output_dir,rule_dir):
                     if i == '-':
                         sub_array.append('0')
                     else:    
-                        sub_array.append(i)
-                if sub_array[-1] == "1" and int(sub_array[7]) > max_count:
-                    max_count = int(sub_array[7])
-            outputfile.write('alert tcp any any -> $HOME_NET any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(max_count/2)+' , seconds 2; sid: 5000001; rev:1;)')
-            print 'threshold is '+str(max_count/2)
+                        sub_array.append(i) 
+                if sub_array[-1] == "1":
+                    normal_count = normal_count+int(sub_array[7])
+                    total_record = total_record + 1
+            outputfile.write('alert tcp any any -> $HOME_NET any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(normal_count/total_record)+' , seconds 2; sid: 5000001; rev:1;)')
+            print 'threshold is '+str(normal_count/total_record)
 
             
 def parse_log(log_dir,parser_output_dir):
