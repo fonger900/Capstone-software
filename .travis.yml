@@ -1,0 +1,11 @@
+
+language: c
+before_install: 
+        - sudo-apt-get install python2.7 pip libconfig
+compiler: gcc
+
+install: 
+        - pip install -r requirements.txt
+
+make clean && make
+./getdosrule
