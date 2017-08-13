@@ -1,4 +1,4 @@
-# Capstone-software
+# GetDoSRule
 Applying Machine Learning to create DoS detection rules for [Snort](https://www.snort.org/).
 
 ![louis](http://www2.siit.tu.ac.th/crd/wp-content/uploads/2014/04/LogoFUNew.png)
