@@ -25,7 +25,7 @@ def extract_average_log(parser_output_dir,rule_dir):
                         sub_array.append('0')
                     else:    
                         sub_array.append(i) 
-                if sub_array[-1] == "1":
+                if sub_array[-1] == "1" and sub_array[2] == "tcp":
                     normal_count = normal_count+int(sub_array[7])
                     total_record = total_record + 1
             outputfile.write('alert tcp any any -> $HOME_NET any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count '+str(normal_count/total_record)+' , seconds 2; sid: 5000001; rev:1;)')
