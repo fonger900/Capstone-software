@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/capstone.h"
+#include "capstone.h"
 
 /*Main program entry point. Argc contains number pf argument list element,
   argv is an array of ponter to them*/

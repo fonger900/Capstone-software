@@ -2,7 +2,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/capstone.h"
+#include "capstone.h"
 //#include <stdarg.h>
 
 PyObject* cp_process_expression(const char* filename,const char *func_name, const char* arg)
