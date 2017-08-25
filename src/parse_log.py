@@ -51,6 +51,7 @@ def parse_log(log_dir,parser_output_dir):
             count = 0
             index = 0
             check_index = 0
+			base_time = 0
             for row in readCSV:
                 count_time = 0
                 count_serror = 0
@@ -69,6 +70,8 @@ def parse_log(log_dir,parser_output_dir):
                         else:    
                             sub_array.append(i)
                     if len(sub_array) > 6:
+						if count == 9:
+							base_time = sub_array[0]
                         all_log.append(sub_array)
                         check_index = index-1
                         if check_index > -1:               
@@ -134,5 +137,6 @@ def parse_log(log_dir,parser_output_dir):
                         dst_host_srv_serror_rate = 0                                                                   
                     index = index + 1      
                     if len(sub_array) > 6:
-                        outputfile.write(sub_array[0]+","+sub_array[8]+","+sub_array[6] + ","+sub_array[5]+"," +sub_array[11] + ","+sub_array[9]+","+sub_array[10]+","+str(count_time)+","+str(serror_rate)+","+str(rerror_rate)+","+str(diff_srv_rate)+","+str(dst_host_count)+","+str(dst_host_srv_count)+","+str(host_same_srv_rate)+","+str(host_diff_srv_rate)+","+str(dst_host_srv_serror_rate)+"\n")
+						second = int(float(sub_array[0]) - float(base_time))
+                        outputfile.write(str(second)+","+sub_array[8]+","+sub_array[6] + ","+sub_array[5]+"," +sub_array[11] + ","+sub_array[9]+","+sub_array[10]+","+str(count_time)+","+str(serror_rate)+","+str(rerror_rate)+","+str(diff_srv_rate)+","+str(dst_host_count)+","+str(dst_host_srv_count)+","+str(host_same_srv_rate)+","+str(host_diff_srv_rate)+","+str(dst_host_srv_serror_rate)+"\n")
     return output_file
