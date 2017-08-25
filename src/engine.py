@@ -38,11 +38,12 @@ def preprocess_data(log_data):
     #feature scaling
     log_data=log_data.astype(float)
     from sklearn.preprocessing import MinMaxScaler
-    for each_column in log_data:
+    for each_column in log_data[1:]:
         log_data[each_column] = MinMaxScaler().fit_transform(log_data[each_column].values.reshape(len(log_data),-1))
     return log_data
     
 def predict_label(pre_log_data):
+    pre_log_data = pre_log_data.drop(['time'],axis=1)
     from sklearn.externals import joblib
     clf = joblib.load('model/kdd_model.pkl')
     label = clf.predict(pre_log_data)
@@ -53,7 +54,7 @@ def calculate_threshold(log_data):
     return threshold
     
 def run_predict(csv_file):
-    colname = ["duration","protocol_type","service","flag","src_bytes","dst_bytes","count","serror_rate","rerror_rate","diff_srv_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_srv_serror_rate"]
+    colname = ["time","duration","protocol_type","service","flag","src_bytes","dst_bytes","count","serror_rate","rerror_rate","diff_srv_rate","dst_host_count","dst_host_srv_count","dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_srv_serror_rate"]
     
     log_data=pd.read_csv(csv_file,header=None, names=colname)
     
@@ -67,7 +68,6 @@ def run_predict(csv_file):
 def main(log_dir,parser_output_dir,rule_dir):
     #print "break point"
     csv_file = parse_log.parse_log(log_dir,parser_output_dir)
-    
     run_predict(csv_file)
     parse_log.extract_average_log(parser_output_dir,rule_dir)
     print "done"
