@@ -141,7 +141,7 @@ def parse_log(log_dir,parser_output_dir):
                         second = int(float(sub_array[0]) - float(base_time))
                         outputfile.write(str(second)+","+sub_array[8]+","+sub_array[6] + ","+sub_array[5]+"," +sub_array[11] + ","+sub_array[9]+","+sub_array[10]+","+str(count_time)+","+str(serror_rate)+","+str(rerror_rate)+","+str(diff_srv_rate)+","+str(dst_host_count)+","+str(dst_host_srv_count)+","+str(host_same_srv_rate)+","+str(host_diff_srv_rate)+","+str(dst_host_srv_serror_rate)+"\n")
     return output_file
-=======
+#=======
 import csv
 import glob
 import os
