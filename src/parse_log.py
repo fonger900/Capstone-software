@@ -51,7 +51,7 @@ def parse_log(log_dir,parser_output_dir):
             count = 0
             index = 0
             check_index = 0
-			base_time = 0
+	    base_time = 0
             for row in readCSV:
                 count_time = 0
                 count_serror = 0
