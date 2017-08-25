@@ -32,18 +32,18 @@ def preprocess_data(log_data):
         log_data.loc[log_data[colname]!=i,colname]=0
         log_data.loc[log_data[colname]==i,colname]=1
 
-    #preprocessing 'flag' and 'protocol_type' attribute (having few number of unique value)
+    #preprocessing 'flag' and 'protocol_type' attribute (having few number of unique value)k2222
     log_data=log_data.drop(['protocol_type','flag'],axis=1)
 
     #feature scaling
     log_data=log_data.astype(float)
     from sklearn.preprocessing import MinMaxScaler
-    for each_column in log_data[1:]:
+    for each_column in log_data:
         log_data[each_column] = MinMaxScaler().fit_transform(log_data[each_column].values.reshape(len(log_data),-1))
     return log_data
     
 def predict_label(pre_log_data):
-    pre_log_data = pre_log_data.drop(['time'],axis=1)
+   
     from sklearn.externals import joblib
     clf = joblib.load('model/kdd_model.pkl')
     label = clf.predict(pre_log_data)
@@ -59,9 +59,11 @@ def run_predict(csv_file):
     log_data=pd.read_csv(csv_file,header=None, names=colname)
     
     pre_log_data = log_data.copy()
+    pre_log_data = pre_log_data.drop(['time'],axis=1)
     pre_log_data = preprocess_data(pre_log_data)
     label = predict_label(pre_log_data)
     log_data['label'] = label
+
     log_data.to_csv(csv_file)
     #print "done"
     
